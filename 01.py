@@ -6,15 +6,17 @@ import numpy as np
 
 df = pd.read_csv('data.csv')
 
+print("Original Data: " ,df.head(10))
+print("\n")
+
 # Summary
-print(df.describe())
+print("Descriptive Stats: \n",df.describe())
 print("\n")
 
-print(df.info())
+print("Info\n" ,df.info())
 print("\n")
 
-print(df.head(10))
-print("\n")
+
 
 
 # Data Cleaning
@@ -82,5 +84,18 @@ plt.tight_layout()
 plt.grid(axis='y')
 plt.show()
 
+
+
+
+# 3. Correlation Analysis Between Pollutants
+print("\nCorrelation Analysis Between Pollutants:")
+numeric_data = df.select_dtypes(include=['number'])
+correlation_matrix = numeric_data.corr()
+print(correlation_matrix)
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='coolwarm', square=True, cbar_kws={"shrink": .8})
+plt.title('Correlation Analysis Between Pollutants')
+plt.show()
 
 

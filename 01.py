@@ -148,3 +148,25 @@ plt.show()
 
 
 
+
+# Weekend vs Weekday Pollution Levels
+
+df['last_update'] = pd.to_datetime(df['last_update'], errors='coerce')
+df = df.dropna(subset=['last_update'])
+
+df['day_of_week'] = df['last_update'].dt.dayofweek  # 0 = Monday, ..., 6 = Sunday
+df['day_type'] = df['day_of_week'].apply(lambda x: 'Weekend' if x >= 5 else 'Weekday')
+
+df['pollutant_avg'] = pd.to_numeric(df['pollutant_avg'], errors='coerce')
+df = df.dropna(subset=['pollutant_avg'])
+
+daytype_avg = df.groupby('day_type')['pollutant_avg'].mean().reset_index()
+
+plt.figure(figsize=(8, 5))
+sns.barplot(x='day_type', y='pollutant_avg', data=daytype_avg, palette='coolwarm')
+
+plt.title('Average Air Pollution: Weekend vs Weekday', fontsize=16)
+plt.xlabel('Day Type', fontsize=12)
+plt.ylabel('Mean Pollutant Level', fontsize=12)
+plt.tight_layout()
+plt.show()

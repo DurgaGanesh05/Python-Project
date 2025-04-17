@@ -170,3 +170,28 @@ plt.xlabel('Day Type', fontsize=12)
 plt.ylabel('Mean Pollutant Level', fontsize=12)
 plt.tight_layout()
 plt.show()
+
+
+
+# Pollution Spikes
+df['last_update'] = pd.to_datetime(df['last_update'], errors='coerce')
+df = df.dropna(subset=['last_update'])
+
+df['pollutant_avg'] = pd.to_numeric(df['pollutant_avg'], errors='coerce')
+df = df.dropna(subset=['pollutant_avg'])
+
+top_spikes = df.sort_values(by='pollutant_avg', ascending=False).head(5)
+print("Top 5 Pollution Spikes:")
+print(top_spikes[['last_update', 'state', 'pollutant_avg']])
+
+plt.figure(figsize=(10, 5))
+sns.histplot(df['pollutant_avg'], bins=30, kde=True, color='crimson')
+
+plt.title('Distribution of Pollution Levels (Spikes Highlighted)', fontsize=14)
+plt.xlabel('Pollutant Level')
+plt.ylabel('Frequency')
+plt.grid(axis='y', linestyle='--', alpha=0.4)
+plt.tight_layout()
+plt.show()
+
+

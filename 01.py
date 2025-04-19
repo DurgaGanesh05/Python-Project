@@ -195,3 +195,44 @@ plt.tight_layout()
 plt.show()
 
 
+
+# Pollutants Exceeding Safe Limits
+sns.set(style="whitegrid")
+
+safe_limits = {
+    'PM2.5': 60,
+    'PM10': 100,
+    'NO2': 80,
+    'SO2': 80,
+    'CO': 1.0,
+    'O3': 100
+}
+
+df_safe = df[df['pollutant_id'].isin(safe_limits.keys())]
+
+df_safe['exceeds_limit'] = df_safe.apply(
+    lambda row: row['pollutant_max'] > safe_limits[row['pollutant_id']], axis=1
+)
+
+exceed_counts = df_safe[df_safe['exceeds_limit']]['pollutant_id'].value_counts().reset_index()
+exceed_counts.columns = ['Pollutant', 'Times Exceeded']
+
+# Plot
+plt.figure(figsize=(10, 6))
+barplot = sns.barplot(
+    data=exceed_counts,
+    x='Pollutant',
+    y='Times Exceeded',
+    palette='coolwarm'
+)
+
+for index, row in exceed_counts.iterrows():
+    barplot.text(index, row['Times Exceeded'] + 1, row['Times Exceeded'], color='black', ha="center", fontweight='bold')
+
+plt.title('Frequency of Pollutants Exceeding Safe Limits', fontsize=16, fontweight='bold')
+plt.xlabel('Pollutant', fontsize=12, fontweight='bold')
+plt.ylabel('Times Limit Exceeded', fontsize=12, fontweight='bold')
+plt.xticks(fontsize=11)
+plt.yticks(fontsize=11)
+plt.tight_layout()
+plt.show()
